@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교연수학</title>
+    <!-- Google Fonts 추가 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 아이콘 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 전체 스타일 */
+        :root {
+            /* 색상 팔레트 - 모던한 흑백 컬러 */
+            --primary: #333333;
+            --secondary: #666666;
+            --accent: #2c7fda;
+            --accent-light: #63a4ff;
+            --dark: #222222;
+            --light: #f5f5f5;
+            --white: #ffffff;
+            --gray: #999999;
+            --light-gray: #eeeeee;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            color: var(--primary);
+            line-height: 1.6;
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
+        
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+        
+        /* 네비게이션 바 - 글래스모피즘 적용 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-symbol {
+            color: var(--accent);
+            margin-right: 5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            display: block;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent);
+        }
+        
+        /* 드롭다운 메뉴 - 글래스모피즘 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            min-width: 180px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+            padding: 0.8rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 101;
+        }
+        
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.875rem;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--accent);
+        }
+        
+        /* 드롭다운 메뉴 화살표 */
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            border-left: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        /* 햄버거 메뉴 버튼 (기본적으로 숨김) */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 102;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        /* 햄버거 메뉴 활성화 상태 */
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+        
+        /* 히어로 섹션 - 모던한 레이아웃 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 4rem;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 배경 디자인 요소 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background-color: rgba(44, 127, 218, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background-color: rgba(44, 127, 218, 0.05);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* 히어로 이미지 */
+        .hero-image-container {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            padding-right: 2rem;
+        }
+        
+        .hero-image {
+            width: 500px;
+            height: 400px;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                20px 20px 60px rgba(0, 0, 0, 0.1),
+                -20px -20px 60px rgba(255, 255, 255, 0.8);
+            background-image: url('/api/placeholder/500/400');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-text {
+            max-width: 50%;
+            padding-left: 2rem;
+        }
+        
+        .hero-subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        
+        .hero-description {
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        /* CTA 버튼 */
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-top: 1rem;
+            box-shadow: 0 10px 20px rgba(44, 127, 218, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(44, 127, 218, 0.3);
+            background-color: var(--accent-light);
+        }
+        
+        /* 학원 소개 섹션 */
+        .about {
+            padding: 8rem 4rem;
+            background-color: var(--light);
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .about-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 3rem;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .about-description {
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .about-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .feature-item {
+            flex-basis: calc(50% - 0.75rem);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(44, 127, 218, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 0.95rem;
+            color: var(--secondary);
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            height: 400px;
+            background-image: url('/api/placeholder/600/400');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* 커리큘럼 섹션 */
+        .curriculum {
+            padding: 8rem 4rem;
+            background-color: var(--white);
+            position: relative;
+        }
+        
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .curriculum-item {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s, box-shadow 0.4s;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .curriculum-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .curriculum-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(44, 127, 218, 0.1);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .curriculum-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .curriculum-description {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .curriculum-features {
+            list-style: none;
+        }
+        
+        .curriculum-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+        
+        .curriculum-feature i {
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+        
+        /* 강사 소개 섹션 */
+        .teachers {
+            padding: 8rem 4rem;
+            background-color: var(--light);
+            position: relative;
+        }
+        
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .teacher-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+        
+        .teacher-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .teacher-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background-image: url('/api/placeholder/400/300');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .teacher-info {
+            padding: 1.5rem 2rem 2rem;
+        }
+        
+        .teacher-name {
+            font-size: 1.25rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .teacher-subject {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .teacher-description {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .teacher-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(44, 127, 218, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--accent);
+            color: var(--white);
+        }
+        
+        /* 위치 섹션 */
+        .location {
+            padding: 8rem 4rem;
+            background-color: var(--white);
+            position: relative;
+        }
+        
+        .location-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .location-info {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .info-item {
+            margin-bottom: 2.5rem;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .info-title i {
+            margin-right: 0.8rem;
+            color: var(--accent);
+        }
+        
+        .info-divider {
+            width: 100%;
+            height: 1px;
+            background-color: var(--light-gray);
+            margin: 1rem 0;
+        }
+        
+        .info-text {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .map-container {
+            flex: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--gray);
+            font-weight: 300;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .map-container i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .map-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 문의하기 섹션 */
+        .contact {
+            padding: 8rem 4rem;
+            background-color: var(--light);
+            position: relative;
+        }
+        
+        .contact-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .contact-form {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(44, 127, 218, 0.1);
+        }
+        
+        .submit-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-3px);
+        }
+        
+        .contact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .contact-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .contact-card-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(44, 127, 218, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .contact-card-content h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .contact-card-content p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        /* 푸터 */
+        footer {
+            padding: 4rem 4rem 2rem;
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-logo-symbol {
+            color: var(--accent-light);
+            margin-right: 5px;
+        }
+        
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .footer-social-link:hover {
+            background-color: var(--accent);
+        }
+        
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-link a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-link a:hover {
+            color: white;
+        }
+        
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-contact-icon {
+            color: var(--accent-light);
+            font-size: 1rem;
+            margin-top: 0.2rem;
+        }
+        
+        .footer-contact-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .footer-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-bottom-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-bottom-link:hover {
+            color: white;
+        }
+        
+        /* 배지 스타일 */
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 30px;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background-color: rgba(44, 127, 218, 0.1);
+            color: var(--accent);
+        }
+        
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .animate-right {
+            animation: slideInRight 0.8s ease forwards;
+        }
+        
+        .animate-left {
+            animation: slideInLeft 0.8s ease forwards;
+        }
+        
+        .hero-content, .about-content, .curriculum-item, .teacher-card, .location-content {
+            opacity: 0;
+        }
+
+        /* 스크롤 애니메이션을 위한 지연 */
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .delay-5 { animation-delay: 1s; }
+        
+        /* 모바일 대응 */
+        @media (max-width: 992px) {
+            .about-content, .location-content, .contact-content {
+                flex-direction: column;
+            }
+            
+            .curriculum-grid, .teachers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background-color: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                gap: 0;
+                padding: 80px 0 20px;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 101;
+                overflow-y: auto;
+                overflow-x: hidden; /* 가로 스크롤 방지 */
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-item {
+                width: 100%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .nav-link {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+            
+            /* 모바일 드롭다운 최적화 */
+            .dropdown-menu {
+                position: static;
+                left: 0;
+                transform: none;
+                box-shadow: none;
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                opacity: 1;
+                visibility: visible;
+                border-radius: 0;
+                padding: 0;
+                background-color: rgba(0, 0, 0, 0.03);
+                transition: max-height 0.3s ease;
+                border: none;
+            }
+            
+            /* 모바일에서 hover 대신 클릭으로 작동하도록 수정 */
+            .nav-item:hover .dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+            }
+            
+            @media (max-width: 768px) {
+                .nav-item:hover .dropdown-menu {
+                    opacity: 1;
+                    visibility: visible;
+                    transform: none;
+                    max-height: 0; /* hover 효과 무시 */
+                }
+            }
+            
+            .dropdown-menu::before {
+                display: none;
+            }
+            
+            /* 확장 표시기 추가 */
+            .nav-link.has-dropdown::after {
+                content: '+';
+                position: absolute;
+                right: 1.5rem;
+                transition: transform 0.3s;
+            }
+            
+            .nav-link.has-dropdown.active::after {
+                transform: rotate(45deg);
+            }
+            
+            .nav-item.active .dropdown-menu {
+                max-height: 500px;
+                padding: 0.5rem 0;
+            }
+            
+            .dropdown-item {
+                padding: 0.8rem 2.5rem;
+                font-size: 0.9rem;
+                border-top: 1px solid rgba(0, 0, 0, 0.03);
+            }
+            
+            /* 모바일 콘텐츠 조정 */
+            .hero {
+                padding: 6rem 2rem 4rem;
+                min-height: auto;
+            }
+            
+            .hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            
+            .hero-image-container {
+                width: 100%;
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-image {
+                width: 100%;
+                max-width: 350px;
+                height: 280px;
+            }
+            
+            .hero-text {
+                max-width: 100%;
+                padding-left: 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .about, .curriculum, .teachers, .location, .contact {
+                padding: 4rem 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .footer-column {
+                width: 100%;
+            }
+            
+            /* 배경 오버레이 추가 - 메뉴 활성화 시 어두운 배경 */
+            .menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s;
+                z-index: 100;
+            }
+            
+            .menu-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="menu-overlay"></div>
+    
+    <!-- 네비게이션 바 -->
+    <nav>
+        <div class="logo">
+            <span class="logo-symbol"><i class="fas fa-square-root-alt"></i></span>
+            교연수학
+        </div>
+
+</body>
+</html>
+        
+        <!-- 햄버거 메뉴 버튼 -->
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="nav-links">
+            <div class="nav-item">
+                <a href="#" class="nav-link">홈</a>
+            </div>
+            <div class="nav-item">
+                <a href="#about" class="nav-link has-dropdown">학원소개</a>
+                <div class="dropdown-menu">
+                    <a href="#about" class="dropdown-item">교연수학 소개</a>
+                    <a href="#teachers" class="dropdown-item">강사진 소개</a>
+                    <a href="#" class="dropdown-item">교육 철학</a>
+                    <a href="#" class="dropdown-item">시설 안내</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#curriculum" class="nav-link has-dropdown">교육과정</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">초등 수학</a>
+                    <a href="#" class="dropdown-item">중등 수학</a>
+                    <a href="#" class="dropdown-item">고등 수학</a>
+                    <a href="#" class="dropdown-item">수능 대비반</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link has-dropdown">입시정보</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">수능 기출문제</a>
+                    <a href="#" class="dropdown-item">내신 대비</a>
+                    <a href="#" class="dropdown-item">입시 뉴스</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a href="#location" class="nav-link">오시는 길</a>
+            </div>
+            <div class="nav-item">
+                <a href="#contact" class="nav-link">문의하기</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-subtitle">수학의 즐거움을 전합니다</div>
+                <h1 class="hero-title">교연수학</h1>
+                <p class="hero-description">수학적 사고력을 키우는 체계적인 교육과정으로 학생들의 미래를 준비합니다. 개인별 맞춤 학습 시스템으로 효과적인 학습을 경험하세요.</p>
+                <a href="#curriculum" class="cta-button">교육과정 알아보기</a>
+            </div>
+            <div class="hero-image-container">
+                <div class="hero-image"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 학원 소개 섹션 -->
+    <section id="about" class="about">
+        <h2 class="section-title">학원 소개</h2>
+        <p class="section-subtitle">체계적인 학습 관리와 전문적인 교육으로 학생들의 성장을 돕습니다</p>
+        
+        <div class="about-content">
+            <div class="about-text animate-left">
+                <h3 class="about-title">왜 교연수학인가?</h3>
+                <p class="about-description">
+                    교연수학학원은 수학 교육에 대한 깊은 이해와 열정을 바탕으로 학생 개개인의 특성과 수준에 맞는 맞춤형 교육을 제공합니다. 기초부터 심화 과정까지 체계적인 커리큘럼으로 수학적 사고력을 키우고, 문제 해결 능력을 향상시킵니다.
+                </p>
+                <div class="about-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 class="feature-title">개인별 맞춤 학습</h4>
+                            <p>학생 개개인의 학습 상태와 성취도에 따른 맞춤형 교육을 제공합니다.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 class="feature-title">체계적인 커리큘럼</h4>
+                            <p>기초부터 심화까지 단계별로 구성된 체계적인 교육과정을 운영합니다.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 class="feature-title">전문 강사진</h4>
+                            <p>수학 교육 전문가들로 구성된 우수한 강사진이 지도합니다.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 class="feature-title">성적 관리 시스템</h4>
+                            <p>정기적인 평가와 피드백으로 학습 성과를 체계적으로 관리합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image animate-right"></div>
+        </div>
+    </section>
+    
+    <!-- 커리큘럼 섹션 -->
+    <!-- 커리큘럼 섹션 -->
+<section id="curriculum" class="curriculum">
+    <h2 class="section-title">교육 과정</h2>
+    <p class="section-subtitle">학년별 맞춤형 교육과정으로 수학 실력 향상</p>
+    
+    <div class="curriculum-grid">
+        <div class="curriculum-item delay-1">
+            <div class="curriculum-icon">
+                <i class="fas fa-child"></i>
+            </div>
+            <h3 class="curriculum-title">초등 수학 <span class="badge badge-secondary">1-6학년</span></h3>
+            <p class="curriculum-description">
+                기초 수학 개념을 재미있게 학습하며 수학적 사고력의 기반을 다집니다. 학년별 교과 과정에 맞춘 체계적인 학습으로 수학에 대한 자신감과 흥미를 키웁니다.
+            </p>
+            <ul class="curriculum-features">
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>수학적 기초 개념 확립</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>연산 능력 향상 프로그램</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>수학 문제 해결력 훈련</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>사고력 키우는 창의 수학</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="curriculum-item delay-2">
+            <div class="curriculum-icon">
+                <i class="fas fa-calculator"></i>
+            </div>
+            <h3 class="curriculum-title">중등 수학 <span class="badge badge-secondary">중1-3</span></h3>
+            <p class="curriculum-description">
+                중학교 교육과정에 맞춘 체계적인 학습으로 대수, 기하, 확률과 통계 등 다양한 영역의 수학 개념을 확실히 이해하고 문제 해결 능력을 키웁니다.
+            </p>
+            <ul class="curriculum-features">
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>중등 수학 개념 심화 학습</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>내신 대비 집중 프로그램</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>단원별 문제 풀이 전략</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>수학경시대회 준비반</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="curriculum-item delay-3">
+            <div class="curriculum-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3 class="curriculum-title">고등 수학 <span class="badge badge-primary">수능대비</span></h3>
+            <p class="curriculum-description">
+                수능 및 내신 대비를 위한 고등 수학 과정으로, 개념 이해부터 고난도 문제 해결까지 체계적으로 학습합니다. 학생별 취약점 분석을 통한 맞춤형 지도를 제공합니다.
+            </p>
+            <ul class="curriculum-features">
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>수능 수학 영역별 집중 학습</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>고난도 문제 해결 전략</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>개인별 취약점 분석 및 보완</span>
+                </li>
+                <li class="curriculum-feature">
+                    <i class="fas fa-circle"></i>
+                    <span>대학별 기출문제 분석</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+    
+    <!-- 강사 소개 섹션 -->
+    <section id="teachers" class="teachers">
+        <h2 class="section-title">강사 소개</h2>
+        <p class="section-subtitle">전문성과 열정을 가진 교연수학의 선생님들을 소개합니다</p>
+        
+        <div class="teachers-grid">
+            <div class="teacher-card delay-1">
+                <div class="teacher-image"></div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">교연 선생님</h3>
+                    <div class="teacher-subject">고등 수학 전문</div>
+                    <p class="teacher-description">
+                        과거를 청산하고 열심히 살고 있습니다.
+                    </p>
+                    <div class="teacher-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="teacher-card delay-2">
+                <div class="teacher-image"></div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">이수학 선생님</h3>
+                    <div class="teacher-subject">중등 수학 전문</div>
+                    <p class="teacher-description">
+                        연세대학교 수학과 졸업, 중등 수학 교육 전문가로 학생들의 눈높이에 맞는 쉽고 명확한 강의로 정평이 나 있습니다.
+                    </p>
+                    <div class="teacher-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="teacher-card delay-3">
+                <div class="teacher-image"></div>
+                <div class="teacher-info">
+                    <h3 class="teacher-name">박미래 선생님</h3>
+                    <div class="teacher-subject">초등 수학 전문</div>
+                    <p class="teacher-description">
+                        이화여자대학교 초등교육과 졸업, 초등학생들의 수학적 호기심을 자극하는 창의적인 교육 방식으로 아이들에게 인기가 많습니다.
+                    </p>
+                    <div class="teacher-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 위치 섹션 -->
+    <section id="location" class="location">
+        <h2 class="section-title">오시는 길</h2>
+        <p class="section-subtitle">교연수학에 방문하시는 방법을 안내해 드립니다</p>
+        
+        <div class="location-content">
+            <div class="location-info animate-left">
+                <div class="info-item">
+                    <h3 class="info-title"><i class="far fa-clock"></i> 운영시간</h3>
+                    <div class="info-divider"></div>
+                    <p class="info-text">평일: 오후 2:00 - 오후 10:00<br>토요일: 오전 9:00 - 오후 6:00<br>일요일 및 공휴일: 휴무</p>
+                </div>
+                <div class="info-item">
+                    <h3 class="info-title"><i class="far fa-envelope"></i> 연락처</h3>
+                    <div class="info-divider"></div>
+                    <p class="info-text">02-123-4567<br>kyoyeon@math-academy.com</p>
+                </div>
+                <div class="info-item">
+                    <h3 class="info-title"><i class="fas fa-map-marker-alt"></i> 주소</h3>
+                    <div class="info-divider"></div>
+                    <p class="info-text">서울특별시 강남구 테헤란로 123<br>교연빌딩 5층</p>
+                </div>
+                <div class="info-item">
+                    <h3 class="info-title"><i class="fas fa-subway"></i> 교통편</h3>
+                    <div class="info-divider"></div>
+                    <p class="info-text">
+                        지하철: 2호선 강남역 3번 출구에서 도보 5분<br>
+                        버스: 146, 341, 472번 버스 강남역 하차
+                    </p>
+                </div>
+            </div>
+            <div class="map-container animate-right">
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>지도 영역</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 문의하기 섹션 -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">문의하기</h2>
+        <p class="section-subtitle">궁금한 점이나 상담 요청은 언제든지 문의해 주세요</p>
+        
+        <div class="contact-content">
+            <div class="contact-form">
+                <div class="form-group">
+                    <label for="name" class="form-label">이름</label>
+                    <input type="text" id="name" class="form-input" placeholder="이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" id="email" class="form-input" placeholder="이메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="form-label">연락처</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="연락처를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="subject" class="form-label">문의 유형</label>
+                    <select id="subject" class="form-input">
+                        <option value="">문의 유형을 선택하세요</option>
+                        <option value="admission">수강 신청</option>
+                        <option value="curriculum">교육과정 문의</option>
+                        <option value="schedule">수업 일정 문의</option>
+                        <option value="etc">기타 문의</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="form-label">문의 내용</label>
+                    <textarea id="message" class="form-textarea" placeholder="문의하실 내용을 입력하세요"></textarea>
+                </div>
+                <button type="submit" class="submit-button">문의하기</button>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="contact-card-content">
+                        <h3>전화 문의</h3>
+                        <p>02-123-4567<br>평일 오전 10시 ~ 오후 7시</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-card-content">
+                        <h3>이메일 문의</h3>
+                        <p>kyoyeon@math-academy.com<br>24시간 접수, 평일 기준 1일 이내 답변</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="contact-card-content">
+                        <h3>카카오톡 문의</h3>
+                        <p>카카오톡 ID: kyoyeon_math<br>평일 오전 10시 ~ 오후 8시</p>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="contact-card-content">
+                        <h3>방문 상담</h3>
+                        <p>사전 예약 시 방문 상담 가능<br>학부모와 학생 모두 참석 권장</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 푸터 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <span class="footer-logo-symbol"><i class="fas fa-square-root-alt"></i></span>
+                    교연수학학원
+                </div>
+                <p class="footer-description">
+                    교연수학학원은 체계적인 교육과정과 전문적인 강사진을 통해 학생들의 수학적 사고력을 키우고 학업 성취도를 높이는 데 최선을 다하고 있습니다.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-blog"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-heading">메뉴</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#about">학원소개</a></li>
+                    <li class="footer-link"><a href="#curriculum">교육과정</a></li>
+                    <li class="footer-link"><a href="#teachers">강사진</a></li>
+                    <li class="footer-link"><a href="#location">오시는 길</a></li>
+                    <li class="footer-link"><a href="#contact">문의하기</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-heading">교육과정</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">초등 수학 과정</a></li>
+                    <li class="footer-link"><a href="#">중등 수학 과정</a></li>
+                    <li class="footer-link"><a href="#">고등 수학 과정</a></li>
+                    <li class="footer-link"><a href="#">수능 대비반</a></li>
+                    <li class="footer-link"><a href="#">특강 프로그램</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-heading">연락처</h3>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="footer-contact-text">
+                        서울특별시 강남구 테헤란로 123<br>
+                        교연빌딩 5층
+                    </div>
+                </div>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="footer-contact-text">
+                        02-123-4567
+                    </div>
+                </div>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="footer-contact-text">
+                        kyoyeon@math-academy.com
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-divider"></div>
+        
+        <div class="footer-bottom">
+            <div class="copyright">
+                © 2025 교연수학학원. All Rights Reserved.
+            </div>
+            <div class="footer-bottom-links">
+                <a href="#" class="footer-bottom-link">개인정보처리방침</a>
+                <a href="#" class="footer-bottom-link">이용약관</a>
+                <a href="#" class="footer-bottom-link">사이트맵</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // jQuery를 사용하여 문서가 완전히 로드된 후 실행
+        $(document).ready(function() {
+            console.log("문서 로드 완료");
+            
+            // 네비게이션 바 스크롤 이벤트 처리
+            $(window).scroll(function() {
+                if ($(window).scrollTop() > 10) {
+                    $('nav').css('box-shadow', '0 10px 30px rgba(0, 0, 0, 0.1)');
+                } else {
+                    $('nav').css('box-shadow', 'none');
+                }
+            });
+            
+            // 모바일 메뉴 토글
+            $('.menu-toggle').click(function(e) {
+                console.log("햄버거 메뉴 클릭됨");
+                e.preventDefault();
+                $(this).toggleClass('active');
+                $('.nav-links').toggleClass('active');
+                $('.menu-overlay').toggleClass('active');
+                
+                if ($('.nav-links').hasClass('active')) {
+                    $('body').css('overflow', 'hidden');
+                } else {
+                    $('body').css('overflow', '');
+                }
+            });
+            
+            // 메뉴 오버레이 클릭 시 메뉴 닫기
+            $('.menu-overlay').click(function() {
+                $('.menu-toggle').removeClass('active');
+                $('.nav-links').removeClass('active');
+                $(this).removeClass('active');
+                $('body').css('overflow', '');
+            });
+            
+            // 모바일 드롭다운 메뉴 토글
+            $('.nav-link.has-dropdown').click(function(e) {
+                if ($(window).width() <= 768) {
+                    e.preventDefault();
+                    
+                    // 다른 모든 드롭다운 닫기
+                    $('.nav-link.has-dropdown').not(this).removeClass('active');
+                    $('.nav-link.has-dropdown').not(this).parent().removeClass('active');
+                    
+                    // 현재 항목 토글
+                    $(this).toggleClass('active');
+                    $(this).parent().toggleClass('active');
+                }
+            });
+            
+            // 모바일 메뉴 내의 항목 클릭 시 메뉴 닫기 (드롭다운 제외)
+            $('.nav-link:not(.has-dropdown), .dropdown-item').click(function() {
+                if ($(window).width() <= 768) {
+                    $('.menu-toggle').removeClass('active');
+                    $('.nav-links').removeClass('active');
+                    $('.menu-overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                }
+            });
+            
+            // 윈도우 리사이즈 시 모바일 메뉴 상태 리셋
+            $(window).resize(function() {
+                if ($(window).width() > 768) {
+                    $('.menu-toggle').removeClass('active');
+                    $('.nav-links').removeClass('active');
+                    $('.menu-overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    
+                    // 모든 드롭다운 메뉴 초기화
+                    $('.nav-link.has-dropdown').removeClass('active');
+                    $('.nav-link.has-dropdown').parent().removeClass('active');
+                }
+            });
+            
+            // 스크롤 애니메이션
+            function animateOnScroll() {
+                $('.hero-content, .about-content, .curriculum-item, .teacher-card, .location-content').each(function() {
+                    var elementPosition = $(this).offset().top;
+                    var scrollPosition = $(window).scrollTop() + $(window).height() * 0.8;
+                    
+                    if (elementPosition < scrollPosition) {
+                        if ($(this).hasClass('location-info') || $(this).hasClass('about-text')) {
+                            $(this).addClass('animate-left');
+                        } else if ($(this).hasClass('map-container') || $(this).hasClass('about-image')) {
+                            $(this).addClass('animate-right');
+                        } else {
+                            $(this).addClass('animate');
+                        }
+                    }
+                });
+            }
+            
+            // 초기 실행
+            animateOnScroll();
+            
+            // 스크롤 이벤트에 연결
+            $(window).scroll(animateOnScroll);
+            
+            // 네비게이션 링크 스무스 스크롤
+            $('a[href^="#"]:not(.has-dropdown)').click(function(e) {
+                var targetId = $(this).attr('href');
+                if (targetId === '#') {
+                    e.preventDefault();
+                    return;
+                }
+                
+                var targetElement = $(targetId);
+                if (targetElement.length) {
+                    e.preventDefault();
+                    
+                    var delay = $('.nav-links').hasClass('active') ? 300 : 0;
+                    
+                    setTimeout(function() {
+                        $('html, body').animate({
+                            scrollTop: targetElement.offset().top - 80
+                        }, 800);
+                    }, delay);
+                }
+            });
+            
+            // 초기 화면 요소 애니메이션
+            setTimeout(function() {
+                $('.hero-content').addClass('animate');
+            }, 100);
+            
+            // 폼 제출 이벤트 처리
+            $('.contact-form').submit(function(e) {
+                e.preventDefault();
+                
+                // 여기에 폼 유효성 검사 및 제출 로직 추가
+                console.log('폼 제출됨');
+                
+                // 폼 제출 성공 알림
+                alert('문의가 성공적으로 접수되었습니다. 빠른 시일 내에 답변 드리겠습니다.');
+                
+                // 폼 초기화
+                this.reset();
+            });
+            
+            // 수업 신청 기능 (예시)
+            $('.cta-button, .order-button').click(function(e) {
+                if ($(this).attr('href') === '#' || !$(this).attr('href')) {
+                    e.preventDefault();
+                    
+                    // 수업 신청 모달 또는 페이지로 이동하는 로직을 여기에 추가할 수 있습니다.
+                    console.log('수업 신청 버튼 클릭됨');
+                    
+                    // 일단은 알림으로 대체
+                    alert('수업 신청 페이지로 이동합니다.');
+                }
+            });
+            
+            // 이미지 로딩 최적화
+            $('.hero-image, .about-image, .teacher-image').each(function() {
+                var img = new Image();
+                img.src = $(this).css('background-image').replace(/url\(['"]?([^'"]*)['"]?\)/g, '$1');
+                
+                img.onload = function() {
+                    console.log('이미지 로드 완료');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
