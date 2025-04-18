@@ -10,20 +10,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- AOS 라이브러리 (스크롤 애니메이션) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
     <style>
         /* 전체 스타일 */
         :root {
-            /* 색상 팔레트 - 모던한 흑백 컬러 */
+            /* 색상 팔레트 - 모던한 그라디언트 컬러 */
             --primary: #333333;
             --secondary: #666666;
-            --accent: #2c7fda;
-            --accent-light: #63a4ff;
+            --accent: #4169E1;
+            --accent-gradient: linear-gradient(135deg, #4169E1, #63a4ff);
+            --secondary-gradient: linear-gradient(135deg, #6B8DE3, #8B9CE3);
             --dark: #222222;
             --light: #f5f5f5;
             --white: #ffffff;
             --gray: #999999;
             --light-gray: #eeeeee;
             --glass-bg: rgba(255, 255, 255, 0.9);
+            /* 뉴모피즘 효과용 변수 */
+            --neumorphism-light: rgba(255, 255, 255, 0.7);
+            --neumorphism-dark: rgba(0, 0, 0, 0.1);
         }
         
         * {
@@ -76,11 +82,21 @@
             color: var(--primary);
             display: flex;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
         
         .logo-symbol {
             color: var(--accent);
             margin-right: 5px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         .nav-links {
@@ -101,6 +117,22 @@
             transition: color 0.3s;
             padding: 0.5rem 0;
             display: block;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
         }
         
         .nav-link:hover {
@@ -112,24 +144,24 @@
             position: absolute;
             top: 100%;
             left: 50%;
-            transform: translateX(-50%) translateY(10px);
+            transform: translateX(-50%) translateY(20px);
             background-color: var(--glass-bg);
             backdrop-filter: blur(10px);
             min-width: 180px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 0.8rem 0;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 101;
         }
         
         .nav-item:hover .dropdown-menu {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(10px);
         }
         
         .dropdown-item {
@@ -144,6 +176,7 @@
         .dropdown-item:hover {
             background-color: rgba(0, 0, 0, 0.05);
             color: var(--accent);
+            transform: translateX(5px);
         }
         
         /* 드롭다운 메뉴 화살표 */
@@ -206,28 +239,55 @@
         }
         
         /* 배경 디자인 요소 */
-        .hero::before {
-            content: '';
+        .hero-bg {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .shape-1 {
             top: -100px;
             right: -100px;
             width: 500px;
             height: 500px;
-            background-color: rgba(44, 127, 218, 0.05);
-            border-radius: 50%;
-            z-index: 0;
+            background: var(--accent);
+            animation: float 12s infinite alternate;
         }
         
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
+        .shape-2 {
+            bottom: -150px;
+            left: -150px;
             width: 400px;
             height: 400px;
-            background-color: rgba(44, 127, 218, 0.05);
-            border-radius: 50%;
-            z-index: 0;
+            background: #7b68ee;
+            animation: float 15s infinite alternate-reverse;
+        }
+        
+        .shape-3 {
+            top: 40%;
+            left: 15%;
+            width: 200px;
+            height: 200px;
+            background: #4682b4;
+            animation: float 10s 1s infinite alternate;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.05); }
+            100% { transform: translate(-20px, 20px) scale(0.95); }
         }
         
         .hero-content {
@@ -245,20 +305,72 @@
             display: flex;
             justify-content: center;
             padding-right: 2rem;
+            position: relative;
         }
         
         .hero-image {
             width: 500px;
             height: 400px;
             position: relative;
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: 
-                20px 20px 60px rgba(0, 0, 0, 0.1),
-                -20px -20px 60px rgba(255, 255, 255, 0.8);
+                20px 20px 60px var(--neumorphism-dark),
+                -20px -20px 60px var(--neumorphism-light);
             background-image: url('/api/placeholder/500/400');
             background-size: cover;
             background-position: center;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .hero-image:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                25px 25px 70px var(--neumorphism-dark),
+                -25px -25px 70px var(--neumorphism-light);
+        }
+        
+        /* 수학 공식 애니메이션 효과 */
+        .math-equations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .equation {
+            position: absolute;
+            color: rgba(65, 105, 225, 0.2);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            animation: fadeInOut 10s infinite linear;
+        }
+        
+        .eq-1 {
+            top: 20%;
+            left: 10%;
+            font-size: 1.8rem;
+            animation-delay: 0s;
+        }
+        
+        .eq-2 {
+            top: 40%;
+            right: 15%;
+            font-size: 2.2rem;
+            animation-delay: 3s;
+        }
+        
+        .eq-3 {
+            bottom: 30%;
+            left: 25%;
+            font-size: 1.6rem;
+            animation-delay: 6s;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(20px); }
+            50% { opacity: 0.3; transform: translateY(0); }
         }
         
         .hero-text {
@@ -272,6 +384,18 @@
             font-weight: 600;
             margin-bottom: 1rem;
             letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-subtitle:before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            width: 15px;
+            height: 2px;
+            background: var(--accent-gradient);
         }
         
         .hero-title {
@@ -281,6 +405,10 @@
             font-weight: 700;
             color: var(--primary);
             line-height: 1.2;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         
         .hero-description {
@@ -288,32 +416,69 @@
             margin-bottom: 2rem;
             font-size: 1.1rem;
             font-weight: 400;
+            line-height: 1.8;
         }
         
-        /* CTA 버튼 */
+        /* CTA 버튼 - 뉴모피즘 효과 */
         .cta-button {
             display: inline-block;
             padding: 0.8rem 2rem;
-            background-color: var(--accent);
+            background: var(--accent-gradient);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 500;
             margin-top: 1rem;
-            box-shadow: 0 10px 20px rgba(44, 127, 218, 0.2);
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cta-button:hover:before {
+            width: 100%;
         }
         
         .cta-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(44, 127, 218, 0.3);
-            background-color: var(--accent-light);
+            box-shadow: 
+                8px 8px 20px var(--neumorphism-dark),
+                -8px -8px 20px var(--neumorphism-light);
+        }
+        
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 
+                inset 5px 5px 10px rgba(0, 0, 0, 0.2),
+                inset -5px -5px 10px rgba(255, 255, 255, 0.1);
         }
         
         /* 학원 소개 섹션 */
         .about {
             padding: 8rem 4rem;
             background-color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title-container {
+            text-align: center;
+            margin-bottom: 2rem;
             position: relative;
         }
         
@@ -324,6 +489,20 @@
             text-align: center;
             font-weight: 700;
             color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 3px;
         }
         
         .section-subtitle {
@@ -331,6 +510,9 @@
             color: var(--secondary);
             margin-bottom: 3rem;
             font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .about-content {
@@ -349,6 +531,17 @@
             margin-bottom: 1.5rem;
             color: var(--primary);
             font-weight: 600;
+            position: relative;
+        }
+        
+        .about-title:before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            width: 15px;
+            height: 2px;
+            background: var(--accent-gradient);
         }
         
         .about-description {
@@ -369,17 +562,31 @@
             display: flex;
             align-items: flex-start;
             gap: 1rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: var(--white);
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                8px 8px 20px var(--neumorphism-dark),
+                -8px -8px 20px var(--neumorphism-light);
         }
         
         .feature-icon {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(44, 127, 218, 0.1);
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gradient);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--accent);
+            color: var(--white);
             font-size: 1.2rem;
             flex-shrink: 0;
         }
@@ -397,13 +604,23 @@
         
         .about-image {
             flex: 1;
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                10px 10px 30px var(--neumorphism-dark),
+                -10px -10px 30px var(--neumorphism-light);
             height: 400px;
             background-image: url('/api/placeholder/600/400');
             background-size: cover;
             background-position: center;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .about-image:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                15px 15px 40px var(--neumorphism-dark),
+                -15px -15px 40px var(--neumorphism-light);
         }
         
         /* 커리큘럼 섹션 */
@@ -411,6 +628,31 @@
             padding: 8rem 4rem;
             background-color: var(--white);
             position: relative;
+            overflow: hidden;
+        }
+        
+        /* 배경 요소 */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .bg-shape-1 {
+            top: -10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+        }
+        
+        .bg-shape-2 {
+            bottom: -10%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: #7b68ee;
         }
         
         .curriculum-grid {
@@ -418,33 +660,58 @@
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
             margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
         
         .curriculum-item {
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: transform 0.4s, box-shadow 0.4s;
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), box-shadow 0.5s ease;
             border: 1px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
         }
         
         .curriculum-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-15px);
+            box-shadow: 
+                15px 15px 35px var(--neumorphism-dark),
+                -15px -15px 35px var(--neumorphism-light);
+        }
+        
+        .curriculum-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gradient);
         }
         
         .curriculum-icon {
-            width: 60px;
-            height: 60px;
-            background-color: rgba(44, 127, 218, 0.1);
-            border-radius: 12px;
+            width: 70px;
+            height: 70px;
+            background: var(--accent-gradient);
+            border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--accent);
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 1.8rem;
+            transform: rotate(-5deg);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .curriculum-item:hover .curriculum-icon {
+            transform: rotate(0deg);
         }
         
         .curriculum-title {
@@ -468,15 +735,27 @@
         .curriculum-feature {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            gap: 0.8rem;
+            margin-bottom: 0.85rem;
             font-size: 0.9rem;
             color: var(--secondary);
+            transition: transform 0.3s ease;
+        }
+        
+        .curriculum-feature:hover {
+            transform: translateX(5px);
         }
         
         .curriculum-feature i {
             color: var(--accent);
             font-size: 0.8rem;
+            background: rgba(65, 105, 225, 0.1);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         /* 강사 소개 섹션 */
@@ -484,26 +763,40 @@
             padding: 8rem 4rem;
             background-color: var(--light);
             position: relative;
+            overflow: hidden;
         }
         
         .teachers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            gap: 2.5rem;
             margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
         
         .teacher-card {
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: transform 0.4s, box-shadow 0.4s;
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+            position: relative;
         }
         
         .teacher-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                15px 15px 35px var(--neumorphism-dark),
+                -15px -15px 35px var(--neumorphism-light);
+        }
+        
+        .teacher-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
         }
         
         .teacher-image {
@@ -513,10 +806,25 @@
             background-image: url('/api/placeholder/400/300');
             background-size: cover;
             background-position: center;
+            transition: transform 0.5s ease;
+        }
+        
+        .teacher-card:hover .teacher-image {
+            transform: scale(1.1);
+        }
+        
+        .teacher-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
         }
         
         .teacher-info {
-            padding: 1.5rem 2rem 2rem;
+            padding: 1.8rem 2rem 2rem;
+            position: relative;
         }
         
         .teacher-name {
@@ -527,10 +835,18 @@
         }
         
         .teacher-subject {
-            color: var(--accent);
+            color: white;
             font-size: 0.9rem;
             font-weight: 500;
             margin-bottom: 1rem;
+            padding: 0.3rem 1rem;
+            background: var(--accent-gradient);
+            border-radius: 30px;
+            display: inline-block;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .teacher-description {
@@ -542,14 +858,14 @@
         
         .teacher-social {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
         }
         
         .social-icon {
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background-color: rgba(44, 127, 218, 0.1);
+            background-color: rgba(65, 105, 225, 0.1);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -559,8 +875,547 @@
         }
         
         .social-icon:hover {
-            background-color: var(--accent);
+            background: var(--accent-gradient);
             color: var(--white);
+            transform: translateY(-3px);
+        }
+        
+        /* 성공 사례/후기 섹션 */
+        .testimonials {
+            padding: 8rem 4rem;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonials-container {
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 2rem;
+            padding: 1rem 0.5rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .testimonial-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .testimonial-slide {
+            flex: 0 0 auto;
+            width: calc(33.333% - 1.5rem);
+            height: auto;
+            scroll-snap-align: start;
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .testimonial-slide:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                12px 12px 30px var(--neumorphism-dark),
+                -12px -12px 30px var(--neumorphism-light);
+        }
+        
+        .testimonial-content {
+            position: relative;
+        }
+        
+        .testimonial-quote {
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: -30px;
+            left: -10px;
+        }
+        
+        .testimonial-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-image: url('/api/placeholder/100/100');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--accent);
+        }
+        
+        .author-info {
+            flex: 1;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .author-title {
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+        
+        .testimonial-rating {
+            display: flex;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-star {
+            color: #FFD700;
+        }
+        
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            background: var(--accent-gradient);
+            width: 25px;
+            border-radius: 10px;
+        }
+        
+        .testimonial-arrows {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .arrow {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow:hover {
+            background: var(--accent-gradient);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+        
+        /* FAQ 섹션 */
+        .faq {
+            padding: 8rem 4rem;
+            background-color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 4rem auto 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .faq-item {
+            background-color: var(--white);
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                8px 8px 20px var(--neumorphism-dark),
+                -8px -8px 20px var(--neumorphism-light);
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        
+        .faq-question h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .faq-question:hover h3 {
+            color: var(--accent);
+        }
+        
+        .faq-icon {
+            background-color: rgba(65, 105, 225, 0.1);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-answer {
+            padding: 0 2rem;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.3s ease;
+        }
+        
+        .faq-answer-content {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            background: var(--accent-gradient);
+            color: var(--white);
+        }
+        
+        .faq-item.active .faq-answer {
+            height: auto;
+        }
+        
+        /* 블로그 섹션 */
+        .blog {
+            padding: 8rem 4rem;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .blog-card {
+            background-color: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+            position: relative;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 
+                15px 15px 35px var(--neumorphism-dark),
+                -15px -15px 35px var(--neumorphism-light);
+        }
+        
+        .blog-image {
+            height: 200px;
+            background-image: url('/api/placeholder/400/200');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blog-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
+        }
+        
+        .blog-category {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .blog-content {
+            padding: 2rem;
+        }
+        
+        .blog-date {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blog-date i {
+            font-size: 0.8rem;
+        }
+        
+        .blog-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+        
+        .blog-card:hover .blog-title {
+            color: var(--accent);
+        }
+        
+        .blog-excerpt {
+            font-size: 0.95rem;
+            color: var(--secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .blog-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-link:hover {
+            gap: 0.8rem;
+        }
+        
+        /* 학생 포털/회원 영역 */
+        .portal {
+            padding: 8rem 4rem;
+            background-color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-container {
+            display: flex;
+            gap: 3rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .portal-info {
+            flex: 1;
+        }
+        
+        .portal-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .portal-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 3px;
+        }
+        
+        .portal-description {
+            color: var(--secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2.5rem;
+        }
+        
+        .feature-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+        
+        .feature-list-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(65, 105, 225, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        
+        .portal-form {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 
+                10px 10px 30px var(--neumorphism-dark),
+                -10px -10px 30px var(--neumorphism-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-tabs {
+            display: flex;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .form-tab {
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .form-tab.active {
+            color: var(--accent);
+        }
+        
+        .form-tab:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .form-tab.active:after {
+            transform: scaleX(1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.7rem;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            background-color: var(--white);
+        }
+        
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+            outline: none;
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .form-link {
+            color: var(--accent);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .form-link:hover {
+            text-decoration: underline;
         }
         
         /* 위치 섹션 */
@@ -568,6 +1423,7 @@
             padding: 8rem 4rem;
             background-color: var(--white);
             position: relative;
+            overflow: hidden;
         }
         
         .location-content {
@@ -576,19 +1432,36 @@
             align-items: stretch;
             gap: 3rem;
             margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
         
         .location-info {
             flex: 1;
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 3rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--light-gray);
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .location-info:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                12px 12px 30px var(--neumorphism-dark),
+                -12px -12px 30px var(--neumorphism-light);
         }
         
         .info-item {
             margin-bottom: 2.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
         }
         
         .info-item:last-child {
@@ -596,7 +1469,7 @@
         }
         
         .info-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -607,12 +1480,19 @@
         .info-title i {
             margin-right: 0.8rem;
             color: var(--accent);
+            width: 40px;
+            height: 40px;
+            background: rgba(65, 105, 225, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .info-divider {
             width: 100%;
             height: 1px;
-            background-color: var(--light-gray);
+            background: linear-gradient(to right, var(--light-gray), transparent);
             margin: 1rem 0;
         }
         
@@ -624,12 +1504,15 @@
         
         .map-container {
             flex: 1;
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s ease;
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
             background-color: var(--light);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
@@ -639,10 +1522,23 @@
             min-height: 400px;
         }
         
+        .map-container:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                12px 12px 30px var(--neumorphism-dark),
+                -12px -12px 30px var(--neumorphism-light);
+        }
+        
         .map-container i {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--accent);
             margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .map-placeholder {
@@ -650,6 +1546,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
+            text-align: center;
         }
         
         /* 문의하기 섹션 */
@@ -657,6 +1555,7 @@
             padding: 8rem 4rem;
             background-color: var(--light);
             position: relative;
+            overflow: hidden;
         }
         
         .contact-content {
@@ -664,14 +1563,45 @@
             justify-content: space-between;
             gap: 3rem;
             margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
         
         .contact-form {
             flex: 1;
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 3rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 
+                8px 8px 24px var(--neumorphism-dark),
+                -8px -8px 24px var(--neumorphism-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-form:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                12px 12px 30px var(--neumorphism-dark),
+                -12px -12px 30px var(--neumorphism-light);
+        }
+        
+        .contact-form:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gradient);
+        }
+        
+        .contact-form-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
         }
         
         .form-group {
@@ -680,21 +1610,21 @@
         
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.7rem;
             font-weight: 500;
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
         
-        .form-input, .form-textarea {
+        .form-input, .form-textarea, .form-select {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.9rem 1rem;
             border: 1px solid var(--light-gray);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
             color: var(--primary);
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: all 0.3s ease;
+            background-color: var(--white);
         }
         
         .form-textarea {
@@ -702,55 +1632,90 @@
             resize: vertical;
         }
         
-        .form-input:focus, .form-textarea:focus {
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(44, 127, 218, 0.1);
+            box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+            outline: none;
         }
         
         .submit-button {
-            background-color: var(--accent);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 0.8rem 2rem;
+            padding: 0.9rem 2rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 500;
             font-size: 0.95rem;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .submit-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        
+        .submit-button:hover:before {
+            width: 100%;
         }
         
         .submit-button:hover {
-            background-color: var(--accent-light);
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 
+                8px 8px 20px var(--neumorphism-dark),
+                -8px -8px 20px var(--neumorphism-light);
         }
         
         .contact-info {
             flex: 1;
             display: flex;
             flex-direction: column;
+            gap: 1.5rem;
         }
         
         .contact-card {
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 
+                5px 5px 15px var(--neumorphism-dark),
+                -5px -5px 15px var(--neumorphism-light);
             display: flex;
             align-items: center;
             gap: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateX(10px);
+            box-shadow: 
+                8px 8px 20px var(--neumorphism-dark),
+                -8px -8px 20px var(--neumorphism-light);
         }
         
         .contact-card-icon {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(44, 127, 218, 0.1);
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--accent);
-            font-size: 1.2rem;
+            color: var(--white);
+            font-size: 1.3rem;
             flex-shrink: 0;
         }
         
@@ -767,11 +1732,76 @@
             line-height: 1.6;
         }
         
+        /* 라이브 챗 아이콘 */
+        .live-chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(65, 105, 225, 0.4);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .live-chat-button:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(65, 105, 225, 0.5);
+        }
+        
+        .live-chat-button i {
+            animation: pulse 2s infinite;
+        }
+        
         /* 푸터 */
         footer {
             padding: 4rem 4rem 2rem;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, #333333, #222222);
             color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 푸터 배경 요소 */
+        .footer-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .footer-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .footer-shape-1 {
+            top: -10%;
+            right: -5%;
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+        }
+        
+        .footer-shape-2 {
+            bottom: -10%;
+            left: -5%;
+            width: 250px;
+            height: 250px;
+            background: #7b68ee;
         }
         
         .footer-content {
@@ -779,6 +1809,8 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 3rem;
+            position: relative;
+            z-index: 1;
         }
         
         .footer-column {
@@ -797,8 +1829,9 @@
         }
         
         .footer-logo-symbol {
-            color: var(--accent-light);
+            color: var(--accent);
             margin-right: 5px;
+            display: inline-block;
         }
         
         .footer-description {
@@ -814,8 +1847,8 @@
         }
         
         .footer-social-link {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.1);
             display: flex;
@@ -826,7 +1859,8 @@
         }
         
         .footer-social-link:hover {
-            background-color: var(--accent);
+            background: var(--accent-gradient);
+            transform: translateY(-5px);
         }
         
         .footer-heading {
@@ -834,6 +1868,19 @@
             font-weight: 600;
             margin-bottom: 1.5rem;
             color: white;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
         }
         
         .footer-links {
@@ -848,24 +1895,43 @@
             text-decoration: none;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .footer-link a:hover {
             color: white;
+            transform: translateX(5px);
+        }
+        
+        .footer-link a i {
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-link a:hover i {
+            opacity: 1;
         }
         
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
         
         .footer-contact-icon {
-            color: var(--accent-light);
+            color: var(--accent);
             font-size: 1rem;
             margin-top: 0.2rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .footer-contact-text {
@@ -876,8 +1942,8 @@
         
         .footer-divider {
             height: 1px;
-            background-color: rgba(255, 255, 255, 0.1);
-            margin: 2rem 0;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
+            margin: 3rem 0 2rem;
         }
         
         .footer-bottom {
@@ -885,7 +1951,9 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
         
         .copyright {
@@ -920,62 +1988,60 @@
         }
         
         .badge-primary {
-            background-color: var(--accent);
+            background: var(--accent-gradient);
             color: white;
         }
         
         .badge-secondary {
-            background-color: rgba(44, 127, 218, 0.1);
+            background-color: rgba(65, 105, 225, 0.1);
             color: var(--accent);
         }
         
-        /* 애니메이션 효과 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .animate {
-            animation: fadeIn 0.8s ease forwards;
-        }
-        
-        .animate-right {
-            animation: slideInRight 0.8s ease forwards;
-        }
-        
-        .animate-left {
-            animation: slideInLeft 0.8s ease forwards;
-        }
-        
-        .hero-content, .about-content, .curriculum-item, .teacher-card, .location-content {
+        /* 스크롤 위로 버튼 */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 100px;
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent);
+            font-size: 1.2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.3s ease;
             opacity: 0;
+            visibility: hidden;
         }
-
-        /* 스크롤 애니메이션을 위한 지연 */
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.8s; }
-        .delay-5 { animation-delay: 1s; }
+        
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background: var(--accent-gradient);
+            color: var(--white);
+            transform: translateY(-5px);
+        }
         
         /* 모바일 대응 */
         @media (max-width: 992px) {
-            .about-content, .location-content, .contact-content {
+            .about-content, .location-content, .contact-content, .portal-container {
                 flex-direction: column;
             }
             
-            .curriculum-grid, .teachers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            .curriculum-grid, .teachers-grid, .blog-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .testimonial-slide {
+                width: calc(50% - 1.5rem);
             }
         }
         
@@ -1019,6 +2085,10 @@
             .nav-link {
                 padding: 1rem 2rem;
                 font-size: 1rem;
+            }
+            
+            .nav-link:after {
+                display: none;
             }
             
             /* 모바일 드롭다운 최적화 */
@@ -1083,9 +2153,8 @@
             }
             
             /* 모바일 콘텐츠 조정 */
-            .hero {
+            .hero, .about, .curriculum, .teachers, .testimonials, .faq, .blog, .portal, .location, .contact {
                 padding: 6rem 2rem 4rem;
-                min-height: auto;
             }
             
             .hero-content {
@@ -1110,26 +2179,37 @@
                 padding-left: 0;
             }
             
+            .hero-subtitle:before {
+                left: -15px;
+            }
+            
             .hero-title {
                 font-size: 2.5rem;
             }
             
-            .about, .curriculum, .teachers, .location, .contact {
-                padding: 4rem 2rem;
+            .hero-description {
+                font-size: 1rem;
             }
             
             .section-title {
                 font-size: 2rem;
-                margin-bottom: 2rem;
             }
             
-            .footer-content {
-                flex-direction: column;
-                gap: 2rem;
+            .section-subtitle {
+                font-size: 1rem;
             }
             
-            .footer-column {
+            .about-title:before, .portal-title:before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .testimonial-slide {
                 width: 100%;
+            }
+            
+            .scroll-to-top {
+                right: 30px;
             }
             
             /* 배경 오버레이 추가 - 메뉴 활성화 시 어두운 배경 */
@@ -1150,6 +2230,48 @@
                 opacity: 1;
                 visibility: visible;
             }
+            
+            .footer-column {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .feature-item {
+                flex-basis: 100%;
+            }
+        }
+        
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate {
+            opacity: 0;
+        }
+        
+        .animate-fade {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .animate-right {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .animate-left {
+            animation: slideInLeft 0.8s ease-out forwards;
         }
     </style>
 </head>
@@ -1163,9 +2285,6 @@
             <span class="logo-symbol"><i class="fas fa-square-root-alt"></i></span>
             교연수학
         </div>
-
-</body>
-</html>
         
         <!-- 햄버거 메뉴 버튼 -->
         <div class="menu-toggle">
@@ -1197,12 +2316,18 @@
                 </div>
             </div>
             <div class="nav-item">
-                <a href="#" class="nav-link has-dropdown">입시정보</a>
+                <a href="#blog" class="nav-link has-dropdown">입시정보</a>
                 <div class="dropdown-menu">
                     <a href="#" class="dropdown-item">수능 기출문제</a>
                     <a href="#" class="dropdown-item">내신 대비</a>
                     <a href="#" class="dropdown-item">입시 뉴스</a>
                 </div>
+            </div>
+            <div class="nav-item">
+                <a href="#faq" class="nav-link">자주 묻는 질문</a>
+            </div>
+            <div class="nav-item">
+                <a href="#portal" class="nav-link">학생 포털</a>
             </div>
             <div class="nav-item">
                 <a href="#location" class="nav-link">오시는 길</a>
@@ -1215,14 +2340,27 @@
     
     <!-- 히어로 섹션 -->
     <section class="hero">
+        <div class="hero-bg">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            
+            <!-- 수학 공식 애니메이션 효과 -->
+            <div class="math-equations">
+                <div class="equation eq-1">y = x<sup>2</sup> + 2x + 1</div>
+                <div class="equation eq-2">∫ sin(x) dx = -cos(x) + C</div>
+                <div class="equation eq-3">lim<sub>x→∞</sub> (1 + 1/x)<sup>x</sup> = e</div>
+            </div>
+        </div>
+        
         <div class="hero-content">
-            <div class="hero-text">
+            <div class="hero-text animate" data-aos="fade-right">
                 <div class="hero-subtitle">수학의 즐거움을 전합니다</div>
                 <h1 class="hero-title">교연수학</h1>
                 <p class="hero-description">수학적 사고력을 키우는 체계적인 교육과정으로 학생들의 미래를 준비합니다. 개인별 맞춤 학습 시스템으로 효과적인 학습을 경험하세요.</p>
                 <a href="#curriculum" class="cta-button">교육과정 알아보기</a>
             </div>
-            <div class="hero-image-container">
+            <div class="hero-image-container animate" data-aos="fade-left">
                 <div class="hero-image"></div>
             </div>
         </div>
@@ -1230,17 +2368,19 @@
     
     <!-- 학원 소개 섹션 -->
     <section id="about" class="about">
-        <h2 class="section-title">학원 소개</h2>
-        <p class="section-subtitle">체계적인 학습 관리와 전문적인 교육으로 학생들의 성장을 돕습니다</p>
+        <div class="section-title-container">
+            <h2 class="section-title animate" data-aos="fade-up">학원 소개</h2>
+            <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">체계적인 학습 관리와 전문적인 교육으로 학생들의 성장을 돕습니다</p>
+        </div>
         
         <div class="about-content">
-            <div class="about-text animate-left">
+            <div class="about-text animate" data-aos="fade-right">
                 <h3 class="about-title">왜 교연수학인가?</h3>
                 <p class="about-description">
-                    교연수학학원은 수학 교육에 대한 깊은 이해와 열정을 바탕으로 학생 개개인의 특성과 수준에 맞는 맞춤형 교육을 제공합니다. 기초부터 심화 과정까지 체계적인 커리큘럼으로 수학적 사고력을 키우고, 문제 해결 능력을 향상시킵니다.
+                    교연수학은 수학 교육에 대한 깊은 이해와 열정을 바탕으로 학생 개개인의 특성과 수준에 맞는 맞춤형 교육을 제공합니다. 기초부터 심화 과정까지 체계적인 커리큘럼으로 수학적 사고력을 키우고, 문제 해결 능력을 향상시킵니다.
                 </p>
                 <div class="about-features">
-                    <div class="feature-item">
+                    <div class="feature-item" data-aos="fade-up" data-aos-delay="100">
                         <div class="feature-icon">
                             <i class="fas fa-check"></i>
                         </div>
@@ -1249,7 +2389,7 @@
                             <p>학생 개개인의 학습 상태와 성취도에 따른 맞춤형 교육을 제공합니다.</p>
                         </div>
                     </div>
-                    <div class="feature-item">
+                    <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
                         <div class="feature-icon">
                             <i class="fas fa-book"></i>
                         </div>
@@ -1258,7 +2398,7 @@
                             <p>기초부터 심화까지 단계별로 구성된 체계적인 교육과정을 운영합니다.</p>
                         </div>
                     </div>
-                    <div class="feature-item">
+                    <div class="feature-item" data-aos="fade-up" data-aos-delay="300">
                         <div class="feature-icon">
                             <i class="fas fa-user-graduate"></i>
                         </div>
@@ -1267,7 +2407,7 @@
                             <p>수학 교육 전문가들로 구성된 우수한 강사진이 지도합니다.</p>
                         </div>
                     </div>
-                    <div class="feature-item">
+                    <div class="feature-item" data-aos="fade-up" data-aos-delay="400">
                         <div class="feature-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
@@ -1278,116 +2418,125 @@
                     </div>
                 </div>
             </div>
-            <div class="about-image animate-right"></div>
+            <div class="about-image animate" data-aos="fade-left"></div>
         </div>
     </section>
     
     <!-- 커리큘럼 섹션 -->
-    <!-- 커리큘럼 섹션 -->
-<section id="curriculum" class="curriculum">
-    <h2 class="section-title">교육 과정</h2>
-    <p class="section-subtitle">학년별 맞춤형 교육과정으로 수학 실력 향상</p>
-    
-    <div class="curriculum-grid">
-        <div class="curriculum-item delay-1">
-            <div class="curriculum-icon">
-                <i class="fas fa-child"></i>
-            </div>
-            <h3 class="curriculum-title">초등 수학 <span class="badge badge-secondary">1-6학년</span></h3>
-            <p class="curriculum-description">
-                기초 수학 개념을 재미있게 학습하며 수학적 사고력의 기반을 다집니다. 학년별 교과 과정에 맞춘 체계적인 학습으로 수학에 대한 자신감과 흥미를 키웁니다.
-            </p>
-            <ul class="curriculum-features">
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>수학적 기초 개념 확립</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>연산 능력 향상 프로그램</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>수학 문제 해결력 훈련</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>사고력 키우는 창의 수학</span>
-                </li>
-            </ul>
+    <section id="curriculum" class="curriculum">
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        
+        <div class="section-title-container">
+            <h2 class="section-title animate" data-aos="fade-up">교육 과정</h2>
+            <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">학년별 맞춤형 교육과정으로 수학 실력 향상</p>
         </div>
         
-        <div class="curriculum-item delay-2">
-            <div class="curriculum-icon">
-                <i class="fas fa-calculator"></i>
+        <div class="curriculum-grid">
+            <div class="curriculum-item animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="curriculum-icon">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h3 class="curriculum-title">초등 수학 <span class="badge badge-secondary">1-6학년</span></h3>
+                <p class="curriculum-description">
+                    기초 수학 개념을 재미있게 학습하며 수학적 사고력의 기반을 다집니다. 학년별 교과 과정에 맞춘 체계적인 학습으로 수학에 대한 자신감과 흥미를 키웁니다.
+                </p>
+                <ul class="curriculum-features">
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>수학적 기초 개념 확립</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>연산 능력 향상 프로그램</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>수학 문제 해결력 훈련</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>사고력 키우는 창의 수학</span>
+                    </li>
+                </ul>
             </div>
-            <h3 class="curriculum-title">중등 수학 <span class="badge badge-secondary">중1-3</span></h3>
-            <p class="curriculum-description">
-                중학교 교육과정에 맞춘 체계적인 학습으로 대수, 기하, 확률과 통계 등 다양한 영역의 수학 개념을 확실히 이해하고 문제 해결 능력을 키웁니다.
-            </p>
-            <ul class="curriculum-features">
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>중등 수학 개념 심화 학습</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>내신 대비 집중 프로그램</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>단원별 문제 풀이 전략</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>수학경시대회 준비반</span>
-                </li>
-            </ul>
-        </div>
-        
-        <div class="curriculum-item delay-3">
-            <div class="curriculum-icon">
-                <i class="fas fa-graduation-cap"></i>
+            
+            <div class="curriculum-item animate" data-aos="fade-up" data-aos-delay="200">
+                <div class="curriculum-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3 class="curriculum-title">중등 수학 <span class="badge badge-secondary">중1-3</span></h3>
+                <p class="curriculum-description">
+                    중학교 교육과정에 맞춘 체계적인 학습으로 대수, 기하, 확률과 통계 등 다양한 영역의 수학 개념을 확실히 이해하고 문제 해결 능력을 키웁니다.
+                </p>
+                <ul class="curriculum-features">
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>중등 수학 개념 심화 학습</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>내신 대비 집중 프로그램</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>단원별 문제 풀이 전략</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>수학경시대회 준비반</span>
+                    </li>
+                </ul>
             </div>
-            <h3 class="curriculum-title">고등 수학 <span class="badge badge-primary">수능대비</span></h3>
-            <p class="curriculum-description">
-                수능 및 내신 대비를 위한 고등 수학 과정으로, 개념 이해부터 고난도 문제 해결까지 체계적으로 학습합니다. 학생별 취약점 분석을 통한 맞춤형 지도를 제공합니다.
-            </p>
-            <ul class="curriculum-features">
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>수능 수학 영역별 집중 학습</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>고난도 문제 해결 전략</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>개인별 취약점 분석 및 보완</span>
-                </li>
-                <li class="curriculum-feature">
-                    <i class="fas fa-circle"></i>
-                    <span>대학별 기출문제 분석</span>
-                </li>
-            </ul>
+            
+            <div class="curriculum-item animate" data-aos="fade-up" data-aos-delay="300">
+                <div class="curriculum-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="curriculum-title">고등 수학 <span class="badge badge-primary">수능대비</span></h3>
+                <p class="curriculum-description">
+                    수능 및 내신 대비를 위한 고등 수학 과정으로, 개념 이해부터 고난도 문제 해결까지 체계적으로 학습합니다. 학생별 취약점 분석을 통한 맞춤형 지도를 제공합니다.
+                </p>
+                <ul class="curriculum-features">
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>수능 수학 영역별 집중 학습</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>고난도 문제 해결 전략</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>개인별 취약점 분석 및 보완</span>
+                    </li>
+                    <li class="curriculum-feature">
+                        <i class="fas fa-circle"></i>
+                        <span>대학별 기출문제 분석</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
     
     <!-- 강사 소개 섹션 -->
     <section id="teachers" class="teachers">
-        <h2 class="section-title">강사 소개</h2>
-        <p class="section-subtitle">전문성과 열정을 가진 교연수학의 선생님들을 소개합니다</p>
+        <div class="section-title-container">
+            <h2 class="section-title animate" data-aos="fade-up">강사 소개</h2>
+            <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">전문성과 열정을 가진 교연수학의 선생님들을 소개합니다</p>
+        </div>
         
         <div class="teachers-grid">
-            <div class="teacher-card delay-1">
-                <div class="teacher-image"></div>
+            <div class="teacher-card animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="teacher-image-container">
+                    <div class="teacher-image"></div>
+                    <div class="teacher-image-overlay"></div>
+                </div>
                 <div class="teacher-info">
-                    <h3 class="teacher-name">교연 선생님</h3>
                     <div class="teacher-subject">고등 수학 전문</div>
+                    <h3 class="teacher-name">교연 선생님</h3>
                     <p class="teacher-description">
-                        과거를 청산하고 열심히 살고 있습니다.
+                        과거를 청산하고 개과천선하여 학생들을 가르치고 있습니다.
                     </p>
                     <div class="teacher-social">
                         <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -1397,11 +2546,14 @@
                 </div>
             </div>
             
-            <div class="teacher-card delay-2">
-                <div class="teacher-image"></div>
+            <div class="teacher-card animate" data-aos="fade-up" data-aos-delay="200">
+                <div class="teacher-image-container">
+                    <div class="teacher-image"></div>
+                    <div class="teacher-image-overlay"></div>
+                </div>
                 <div class="teacher-info">
-                    <h3 class="teacher-name">이수학 선생님</h3>
                     <div class="teacher-subject">중등 수학 전문</div>
+                    <h3 class="teacher-name">이수학 선생님</h3>
                     <p class="teacher-description">
                         연세대학교 수학과 졸업, 중등 수학 교육 전문가로 학생들의 눈높이에 맞는 쉽고 명확한 강의로 정평이 나 있습니다.
                     </p>
@@ -1413,11 +2565,14 @@
                 </div>
             </div>
             
-            <div class="teacher-card delay-3">
-                <div class="teacher-image"></div>
+            <div class="teacher-card animate" data-aos="fade-up" data-aos-delay="300">
+                <div class="teacher-image-container">
+                    <div class="teacher-image"></div>
+                    <div class="teacher-image-overlay"></div>
+                </div>
                 <div class="teacher-info">
-                    <h3 class="teacher-name">박미래 선생님</h3>
                     <div class="teacher-subject">초등 수학 전문</div>
+                    <h3 class="teacher-name">박미래 선생님</h3>
                     <p class="teacher-description">
                         이화여자대학교 초등교육과 졸업, 초등학생들의 수학적 호기심을 자극하는 창의적인 교육 방식으로 아이들에게 인기가 많습니다.
                     </p>
@@ -1430,374 +2585,828 @@
             </div>
         </div>
     </section>
-    
-    <!-- 위치 섹션 -->
-    <section id="location" class="location">
-        <h2 class="section-title">오시는 길</h2>
-        <p class="section-subtitle">교연수학에 방문하시는 방법을 안내해 드립니다</p>
-        
-        <div class="location-content">
-            <div class="location-info animate-left">
-                <div class="info-item">
-                    <h3 class="info-title"><i class="far fa-clock"></i> 운영시간</h3>
-                    <div class="info-divider"></div>
-                    <p class="info-text">평일: 오후 2:00 - 오후 10:00<br>토요일: 오전 9:00 - 오후 6:00<br>일요일 및 공휴일: 휴무</p>
-                </div>
-                <div class="info-item">
-                    <h3 class="info-title"><i class="far fa-envelope"></i> 연락처</h3>
-                    <div class="info-divider"></div>
-                    <p class="info-text">02-123-4567<br>kyoyeon@math-academy.com</p>
-                </div>
-                <div class="info-item">
-                    <h3 class="info-title"><i class="fas fa-map-marker-alt"></i> 주소</h3>
-                    <div class="info-divider"></div>
-                    <p class="info-text">서울특별시 강남구 테헤란로 123<br>교연빌딩 5층</p>
-                </div>
-                <div class="info-item">
-                    <h3 class="info-title"><i class="fas fa-subway"></i> 교통편</h3>
-                    <div class="info-divider"></div>
-                    <p class="info-text">
-                        지하철: 2호선 강남역 3번 출구에서 도보 5분<br>
-                        버스: 146, 341, 472번 버스 강남역 하차
-                    </p>
-                </div>
-            </div>
-            <div class="map-container animate-right">
-                <div class="map-placeholder">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <p>지도 영역</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 문의하기 섹션 -->
-    <section id="contact" class="contact">
-        <h2 class="section-title">문의하기</h2>
-        <p class="section-subtitle">궁금한 점이나 상담 요청은 언제든지 문의해 주세요</p>
-        
-        <div class="contact-content">
-            <div class="contact-form">
-                <div class="form-group">
-                    <label for="name" class="form-label">이름</label>
-                    <input type="text" id="name" class="form-input" placeholder="이름을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">이메일</label>
-                    <input type="email" id="email" class="form-input" placeholder="이메일을 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="form-label">연락처</label>
-                    <input type="tel" id="phone" class="form-input" placeholder="연락처를 입력하세요">
-                </div>
-                <div class="form-group">
-                    <label for="subject" class="form-label">문의 유형</label>
-                    <select id="subject" class="form-input">
-                        <option value="">문의 유형을 선택하세요</option>
-                        <option value="admission">수강 신청</option>
-                        <option value="curriculum">교육과정 문의</option>
-                        <option value="schedule">수업 일정 문의</option>
-                        <option value="etc">기타 문의</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="message" class="form-label">문의 내용</label>
-                    <textarea id="message" class="form-textarea" placeholder="문의하실 내용을 입력하세요"></textarea>
-                </div>
-                <button type="submit" class="submit-button">문의하기</button>
-            </div>
-            
-            <div class="contact-info">
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
-                    <div class="contact-card-content">
-                        <h3>전화 문의</h3>
-                        <p>02-123-4567<br>평일 오전 10시 ~ 오후 7시</p>
-                    </div>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="contact-card-content">
-                        <h3>이메일 문의</h3>
-                        <p>kyoyeon@math-academy.com<br>24시간 접수, 평일 기준 1일 이내 답변</p>
-                    </div>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <div class="contact-card-content">
-                        <h3>카카오톡 문의</h3>
-                        <p>카카오톡 ID: kyoyeon_math<br>평일 오전 10시 ~ 오후 8시</p>
-                    </div>
-                </div>
-                <div class="contact-card">
-                    <div class="contact-card-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="contact-card-content">
-                        <h3>방문 상담</h3>
-                        <p>사전 예약 시 방문 상담 가능<br>학부모와 학생 모두 참석 권장</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 푸터 -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <div class="footer-logo">
-                    <span class="footer-logo-symbol"><i class="fas fa-square-root-alt"></i></span>
-                    교연수학학원
-                </div>
-                <p class="footer-description">
-                    교연수학학원은 체계적인 교육과정과 전문적인 강사진을 통해 학생들의 수학적 사고력을 키우고 학업 성취도를 높이는 데 최선을 다하고 있습니다.
-                </p>
-                <div class="footer-social">
-                    <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="footer-social-link"><i class="fab fa-blog"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-column">
-                <h3 class="footer-heading">메뉴</h3>
-                <ul class="footer-links">
-                    <li class="footer-link"><a href="#about">학원소개</a></li>
-                    <li class="footer-link"><a href="#curriculum">교육과정</a></li>
-                    <li class="footer-link"><a href="#teachers">강사진</a></li>
-                    <li class="footer-link"><a href="#location">오시는 길</a></li>
-                    <li class="footer-link"><a href="#contact">문의하기</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3 class="footer-heading">교육과정</h3>
-                <ul class="footer-links">
-                    <li class="footer-link"><a href="#">초등 수학 과정</a></li>
-                    <li class="footer-link"><a href="#">중등 수학 과정</a></li>
-                    <li class="footer-link"><a href="#">고등 수학 과정</a></li>
-                    <li class="footer-link"><a href="#">수능 대비반</a></li>
-                    <li class="footer-link"><a href="#">특강 프로그램</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3 class="footer-heading">연락처</h3>
-                <div class="footer-contact-item">
-                    <div class="footer-contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="footer-contact-text">
-                        서울특별시 강남구 테헤란로 123<br>
-                        교연빌딩 5층
-                    </div>
-                </div>
-                <div class="footer-contact-item">
-                    <div class="footer-contact-icon">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
-                    <div class="footer-contact-text">
-                        02-123-4567
-                    </div>
-                </div>
-                <div class="footer-contact-item">
-                    <div class="footer-contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="footer-contact-text">
-                        kyoyeon@math-academy.com
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-divider"></div>
-        
-        <div class="footer-bottom">
-            <div class="copyright">
-                © 2025 교연수학학원. All Rights Reserved.
-            </div>
-            <div class="footer-bottom-links">
-                <a href="#" class="footer-bottom-link">개인정보처리방침</a>
-                <a href="#" class="footer-bottom-link">이용약관</a>
-                <a href="#" class="footer-bottom-link">사이트맵</a>
-            </div>
-        </div>
-    </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        // jQuery를 사용하여 문서가 완전히 로드된 후 실행
-        $(document).ready(function() {
-            console.log("문서 로드 완료");
+        <!-- 성공 사례/후기 섹션 -->
+        <section id="testimonials" class="testimonials">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">성공 사례</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">교연수학과 함께 성장한 학생들의 생생한 후기</p>
+            </div>
             
-            // 네비게이션 바 스크롤 이벤트 처리
-            $(window).scroll(function() {
-                if ($(window).scrollTop() > 10) {
-                    $('nav').css('box-shadow', '0 10px 30px rgba(0, 0, 0, 0.1)');
-                } else {
-                    $('nav').css('box-shadow', 'none');
-                }
-            });
-            
-            // 모바일 메뉴 토글
-            $('.menu-toggle').click(function(e) {
-                console.log("햄버거 메뉴 클릭됨");
-                e.preventDefault();
-                $(this).toggleClass('active');
-                $('.nav-links').toggleClass('active');
-                $('.menu-overlay').toggleClass('active');
+            <div class="testimonials-container">
+                <div class="testimonial-slider">
+                    <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="100">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+                            <div class="testimonial-rating">
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                            </div>
+                            <p class="testimonial-text">
+                                수학에 대한 두려움이 컸는데, 교연 선생님의 쉬운 설명으로 이해가 잘 되어 성적이 크게 향상되었습니다. 덕분에 목표했던 대학에 합격할 수 있었습니다!
+                            </p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar"></div>
+                                <div class="author-info">
+                                    <h4 class="author-name">김민준</h4>
+                                    <p class="author-title">서울대학교 자연과학대학 합격</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="200">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+                            <div class="testimonial-rating">
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                            </div>
+                            <p class="testimonial-text">
+                                중학교 때부터 교연수학에서 공부했어요. 수학 개념을 체계적으로 다져주셔서 고등학교 올라가서도 어려움 없이 수학 공부를 할 수 있었습니다.
+                            </p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar"></div>
+                                <div class="author-info">
+                                    <h4 class="author-name">이지은</h4>
+                                    <p class="author-title">연세대학교 경영학과 합격</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide" data-aos="fade-up" data-aos-delay="300">
+                        <div class="testimonial-content">
+                            <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+                            <div class="testimonial-rating">
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star"></i></span>
+                                <span class="rating-star"><i class="fas fa-star-half-alt"></i></span>
+                            </div>
+                            <p class="testimonial-text">
+                                수학을 포기하고 있었는데, 교연수학의 1:1 맞춤형 학습 시스템 덕분에 취약점을 보완하고 자신감을 얻을 수 있었습니다. 내신 1등급 달성했어요!
+                            </p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar"></div>
+                                <div class="author-info">
+                                    <h4 class="author-name">박서준</h4>
+                                    <p class="author-title">고교 3학년 / 내신 1등급</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                if ($('.nav-links').hasClass('active')) {
-                    $('body').css('overflow', 'hidden');
-                } else {
-                    $('body').css('overflow', '');
-                }
-            });
-            
-            // 메뉴 오버레이 클릭 시 메뉴 닫기
-            $('.menu-overlay').click(function() {
-                $('.menu-toggle').removeClass('active');
-                $('.nav-links').removeClass('active');
-                $(this).removeClass('active');
-                $('body').css('overflow', '');
-            });
-            
-            // 모바일 드롭다운 메뉴 토글
-            $('.nav-link.has-dropdown').click(function(e) {
-                if ($(window).width() <= 768) {
-                    e.preventDefault();
-                    
-                    // 다른 모든 드롭다운 닫기
-                    $('.nav-link.has-dropdown').not(this).removeClass('active');
-                    $('.nav-link.has-dropdown').not(this).parent().removeClass('active');
-                    
-                    // 현재 항목 토글
-                    $(this).toggleClass('active');
-                    $(this).parent().toggleClass('active');
-                }
-            });
-            
-            // 모바일 메뉴 내의 항목 클릭 시 메뉴 닫기 (드롭다운 제외)
-            $('.nav-link:not(.has-dropdown), .dropdown-item').click(function() {
-                if ($(window).width() <= 768) {
-                    $('.menu-toggle').removeClass('active');
-                    $('.nav-links').removeClass('active');
-                    $('.menu-overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                }
-            });
-            
-            // 윈도우 리사이즈 시 모바일 메뉴 상태 리셋
-            $(window).resize(function() {
-                if ($(window).width() > 768) {
-                    $('.menu-toggle').removeClass('active');
-                    $('.nav-links').removeClass('active');
-                    $('.menu-overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    
-                    // 모든 드롭다운 메뉴 초기화
-                    $('.nav-link.has-dropdown').removeClass('active');
-                    $('.nav-link.has-dropdown').parent().removeClass('active');
-                }
-            });
-            
-            // 스크롤 애니메이션
-            function animateOnScroll() {
-                $('.hero-content, .about-content, .curriculum-item, .teacher-card, .location-content').each(function() {
-                    var elementPosition = $(this).offset().top;
-                    var scrollPosition = $(window).scrollTop() + $(window).height() * 0.8;
-                    
-                    if (elementPosition < scrollPosition) {
-                        if ($(this).hasClass('location-info') || $(this).hasClass('about-text')) {
-                            $(this).addClass('animate-left');
-                        } else if ($(this).hasClass('map-container') || $(this).hasClass('about-image')) {
-                            $(this).addClass('animate-right');
-                        } else {
-                            $(this).addClass('animate');
-                        }
-                    }
-                });
-            }
-            
-            // 초기 실행
-            animateOnScroll();
-            
-            // 스크롤 이벤트에 연결
-            $(window).scroll(animateOnScroll);
-            
-            // 네비게이션 링크 스무스 스크롤
-            $('a[href^="#"]:not(.has-dropdown)').click(function(e) {
-                var targetId = $(this).attr('href');
-                if (targetId === '#') {
-                    e.preventDefault();
-                    return;
-                }
+                <div class="testimonial-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
                 
-                var targetElement = $(targetId);
-                if (targetElement.length) {
-                    e.preventDefault();
-                    
-                    var delay = $('.nav-links').hasClass('active') ? 300 : 0;
-                    
-                    setTimeout(function() {
-                        $('html, body').animate({
-                            scrollTop: targetElement.offset().top - 80
-                        }, 800);
-                    }, delay);
-                }
-            });
+                <div class="testimonial-arrows">
+                    <div class="arrow prev-arrow"><i class="fas fa-chevron-left"></i></div>
+                    <div class="arrow next-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ 섹션 -->
+        <section id="faq" class="faq">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">자주 묻는 질문</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">학부모님과 학생들이 자주 물어보시는 질문들에 대한 답변입니다</p>
+            </div>
             
-            // 초기 화면 요소 애니메이션
-            setTimeout(function() {
-                $('.hero-content').addClass('animate');
-            }, 100);
+            <div class="faq-container">
+                <div class="faq-item active" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <h3>수업은 어떤 방식으로 진행되나요?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            교연수학에서는 학년별, 수준별 소그룹 수업과 1:1 개인 맞춤형 수업을 병행합니다. 기본 개념 강의 후 문제 풀이 및 질의응답 시간을 통해 학생들의 이해도를 높이고, 정기적인 테스트를 통해 학습 성취도를 관리합니다.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <h3>수강료는 어떻게 되나요?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            수강료는 학년과 수업 형태(그룹/개인)에 따라 차이가 있습니다. 초등 과정은 월 20-30만원, 중등 과정은 월 30-40만원, 고등 과정은 월 40-50만원 선으로 책정되어 있습니다. 자세한 내용은 상담을 통해 안내해 드립니다.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="faq-question">
+                        <h3>학습 관리는 어떻게 이루어지나요?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            매주 진행되는 단원별 테스트와 월 1회 진행되는 종합 평가를 통해 학생들의 학습 성취도를 체계적으로 관리합니다. 평가 결과는 학부모님께 정기적으로 제공되며, 취약한 부분에 대한 보충 학습 방안도 함께 제시해 드립니다.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="faq-question">
+                        <h3>수업 외 자습실 이용이 가능한가요?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            네, 가능합니다. 교연수학은 쾌적한 자습 환경을 제공하며, 학생들은 수업 시간 외에도 자습실을 이용할 수 있습니다. 자습 시간에도 선생님들이 상주하여 질문에 답변해 드리고 있어 효율적인 학습이 가능합니다.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="faq-question">
+                        <h3>체험 수업은 어떻게 신청하나요?</h3>
+                        <div class="faq-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            체험 수업은 전화 또는 홈페이지 문의를 통해 신청 가능합니다. 학생의 현재 수준을 파악하기 위한 간단한 테스트 후 1회 무료 체험 수업을 진행합니다. 체험 수업 후 상담을 통해 맞춤형 학습 계획을 제안해 드립니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 블로그 섹션 -->
+        <section id="blog" class="blog">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">입시 정보</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">최신 입시 정보와 학습 팁을 제공합니다</p>
+            </div>
             
-            // 폼 제출 이벤트 처리
-            $('.contact-form').submit(function(e) {
-                e.preventDefault();
+            <div class="blog-grid">
+                <div class="blog-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="blog-image">
+                        <div class="blog-image-overlay"></div>
+                        <div class="blog-category">입시 뉴스</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>2025년 4월 10일</span>
+                        </div>
+                        <h3 class="blog-title">2026학년도 수능 수학 출제 경향 분석</h3>
+                        <p class="blog-excerpt">
+                            2026학년도 수능 수학 영역의 예상 출제 경향과 준비 전략을 분석했습니다. 새롭게 변경된 출제 방식과 학생들이 집중해야 할 부분을 확인해보세요.
+                        </p>
+                        <a href="#" class="blog-link">
+                            자세히 보기 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
                 
-                // 여기에 폼 유효성 검사 및 제출 로직 추가
-                console.log('폼 제출됨');
+                <div class="blog-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="blog-image">
+                        <div class="blog-image-overlay"></div>
+                        <div class="blog-category">학습 팁</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>2025년 4월 5일</span>
+                        </div>
+                        <h3 class="blog-title">효과적인 수학 공부법: 개념 이해부터 문제 해결까지</h3>
+                        <p class="blog-excerpt">
+                            수학 공부에 어려움을 겪는 학생들을 위한 효과적인 학습 방법을 소개합니다. 개념 이해부터 문제 해결 능력 향상까지 단계별 접근법을 알아보세요.
+                        </p>
+                        <a href="#" class="blog-link">
+                            자세히 보기 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
                 
-                // 폼 제출 성공 알림
-                alert('문의가 성공적으로 접수되었습니다. 빠른 시일 내에 답변 드리겠습니다.');
-                
-                // 폼 초기화
-                this.reset();
-            });
+                <div class="blog-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="blog-image">
+                        <div class="blog-image-overlay"></div>
+                        <div class="blog-category">성공 사례</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>2025년 3월 28일</span>
+                        </div>
+                        <h3 class="blog-title">수학 포기자에서 만점자로: 김지훈 학생의 변화 스토리</h3>
+                        <p class="blog-excerpt">
+                            수학을 포기하고 있던 고등학생 김지훈 학생이 교연수학에서 어떻게 수학 만점자로 거듭났는지, 그 놀라운 변화 과정을 살펴봅니다.
+                        </p>
+                        <a href="#" class="blog-link">
+                            자세히 보기 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 학생 포털/회원 영역 -->
+        <section id="portal" class="portal">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">학생 포털</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">개인화된 학습 관리와 성적 분석을 위한 온라인 포털 서비스</p>
+            </div>
             
-            // 수업 신청 기능 (예시)
-            $('.cta-button, .order-button').click(function(e) {
-                if ($(this).attr('href') === '#' || !$(this).attr('href')) {
-                    e.preventDefault();
+            <div class="portal-container">
+                <div class="portal-info" data-aos="fade-right">
+                    <h3 class="portal-title">나만의 학습 관리 시스템</h3>
+                    <p class="portal-description">
+                        교연수학 학생 포털은 개인별 맞춤형 학습 관리와 성적 분석을 위한 온라인 서비스입니다. 언제 어디서나 자신의 학습 현황을 확인하고, 선생님과 소통하며 효율적인 학습을 진행할 수 있습니다.
+                    </p>
+                    <ul class="feature-list">
+                        <li class="feature-list-item">
+                            <div class="feature-list-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <span>개인별 학습 성취도 분석 및 리포트</span>
+                        </li>
+                        <li class="feature-list-item">
+                            <div class="feature-list-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <span>수업 일정 및 과제 관리</span>
+                        </li>
+                        <li class="feature-list-item">
+                            <div class="feature-list-icon">
+                                <i class="fas fa-comment-dots"></i>
+                            </div>
+                            <span>선생님과 1:1 메시지 소통</span>
+                        </li>
+                        <li class="feature-list-item">
+                            <div class="feature-list-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <span>맞춤형 학습 자료 제공</span>
+                        </li>
+                        <li class="feature-list-item">
+                            <div class="feature-list-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <span>보충 학습을 위한 동영상 강의</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="cta-button">자세히 알아보기</a>
+                </div>
+                
+                <div class="portal-form" data-aos="fade-left">
+                    <div class="form-tabs">
+                        <div class="form-tab active">로그인</div>
+                        <div class="form-tab">회원가입</div>
+                    </div>
                     
-                    // 수업 신청 모달 또는 페이지로 이동하는 로직을 여기에 추가할 수 있습니다.
-                    console.log('수업 신청 버튼 클릭됨');
+                    <div class="form-group">
+                        <label for="username" class="form-label">아이디</label>
+                        <input type="text" id="username" class="form-input" placeholder="아이디를 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">비밀번호</label>
+                        <input type="password" id="password" class="form-input" placeholder="비밀번호를 입력하세요">
+                    </div>
                     
-                    // 일단은 알림으로 대체
-                    alert('수업 신청 페이지로 이동합니다.');
-                }
-            });
+                    <div class="form-footer">
+                        <a href="#" class="form-link">비밀번호 찾기</a>
+                        <button type="submit" class="submit-button">로그인</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 위치 섹션 -->
+        <section id="location" class="location">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">오시는 길</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">교연수학에 방문하시는 방법을 안내해 드립니다</p>
+            </div>
             
-            // 이미지 로딩 최적화
-            $('.hero-image, .about-image, .teacher-image').each(function() {
-                var img = new Image();
-                img.src = $(this).css('background-image').replace(/url\(['"]?([^'"]*)['"]?\)/g, '$1');
+            <div class="location-content">
+                <div class="location-info" data-aos="fade-right">
+                    <div class="info-item">
+                        <h3 class="info-title"><i class="far fa-clock"></i> 운영시간</h3>
+                        <div class="info-divider"></div>
+                        <p class="info-text">평일: 오후 2:00 - 오후 10:00<br>토요일: 오전 9:00 - 오후 6:00<br>일요일 및 공휴일: 휴무</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 class="info-title"><i class="far fa-envelope"></i> 연락처</h3>
+                        <div class="info-divider"></div>
+                        <p class="info-text">02-123-4567<br>kyoyeon@math-academy.com</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 class="info-title"><i class="fas fa-map-marker-alt"></i> 주소</h3>
+                        <div class="info-divider"></div>
+                        <p class="info-text">서울특별시 강남구 테헤란로 123<br>교연빌딩 5층</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 class="info-title"><i class="fas fa-subway"></i> 교통편</h3>
+                        <div class="info-divider"></div>
+                        <p class="info-text">
+                            지하철: 2호선 강남역 3번 출구에서 도보 5분<br>
+                            버스: 146, 341, 472번 버스 강남역 하차
+                        </p>
+                    </div>
+                </div>
+                <div class="map-container" data-aos="fade-left">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>지도 영역</p>
+                        <p>실제 구현 시 카카오맵 또는 구글맵 API 연동</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 문의하기 섹션 -->
+        <section id="contact" class="contact">
+            <div class="section-title-container">
+                <h2 class="section-title animate" data-aos="fade-up">문의하기</h2>
+                <p class="section-subtitle animate" data-aos="fade-up" data-aos-delay="100">궁금한 점이나 상담 요청은 언제든지 문의해 주세요</p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-form" data-aos="fade-right">
+                    <h3 class="contact-form-title">상담 신청</h3>
+                    <div class="form-group">
+                        <label for="name" class="form-label">이름</label>
+                        <input type="text" id="name" class="form-input" placeholder="이름을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">이메일</label>
+                        <input type="email" id="email" class="form-input" placeholder="이메일을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">연락처</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="연락처를 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject" class="form-label">문의 유형</label>
+                        <select id="subject" class="form-select">
+                            <option value="">문의 유형을 선택하세요</option>
+                            <option value="admission">수강 신청</option>
+                            <option value="curriculum">교육과정 문의</option>
+                            <option value="schedule">수업 일정 문의</option>
+                            <option value="etc">기타 문의</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="form-label">문의 내용</label>
+                        <textarea id="message" class="form-textarea" placeholder="문의하실 내용을 입력하세요"></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">문의하기</button>
+                </div>
                 
-                img.onload = function() {
-                    console.log('이미지 로드 완료');
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+                <div class="contact-info" data-aos="fade-left">
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h3>전화 문의</h3>
+                            <p>02-123-4567<br>평일 오전 10시 ~ 오후 7시</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h3>이메일 문의</h3>
+                            <p>kyoyeon@math-academy.com<br>24시간 접수, 평일 기준 1일 이내 답변</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h3>카카오톡 문의</h3>
+                            <p>카카오톡 ID: kyoyeon_math<br>평일 오전 10시 ~ 오후 8시</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h3>방문 상담</h3>
+                            <p>사전 예약 시 방문 상담 가능<br>학부모와 학생 모두 참석 권장</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 라이브 챗 아이콘 -->
+        <div class="live-chat-button">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        
+        <!-- 스크롤 위로 버튼 -->
+        <div class="scroll-to-top">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+        
+        <!-- 푸터 -->
+        <footer>
+            <div class="footer-bg">
+                <div class="footer-shape footer-shape-1"></div>
+                <div class="footer-shape footer-shape-2"></div>
+            </div>
+            
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <span class="footer-logo-symbol"><i class="fas fa-square-root-alt"></i></span>
+                        교연수학
+                    </div>
+                    <p class="footer-description">
+                        교연수학은 체계적인 교육과정과 전문적인 강사진을 통해 학생들의 수학적 사고력을 키우고 학업 성취도를 높이는 데 최선을 다하고 있습니다.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-blog"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3 class="footer-heading">메뉴</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#about"><i class="fas fa-chevron-right"></i> 학원소개</a></li>
+                        <li class="footer-link"><a href="#curriculum"><i class="fas fa-chevron-right"></i> 교육과정</a></li>
+                        <li class="footer-link"><a href="#teachers"><i class="fas fa-chevron-right"></i> 강사진</a></li>
+                        <li class="footer-link"><a href="#blog"><i class="fas fa-chevron-right"></i> 입시정보</a></li>
+                        <li class="footer-link"><a href="#faq"><i class="fas fa-chevron-right"></i> 자주 묻는 질문</a></li>
+                        <li class="footer-link"><a href="#location"><i class="fas fa-chevron-right"></i> 오시는 길</a></li>
+                        <li class="footer-link"><a href="#contact"><i class="fas fa-chevron-right"></i> 문의하기</a></li>
+                    </ul>
+                </div>
+
+                                <div class="footer-column">
+                                    <h3 class="footer-heading">교육과정</h3>
+                                    <ul class="footer-links">
+                                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> 초등 수학 과정</a></li>
+                                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> 중등 수학 과정</a></li>
+                                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> 고등 수학 과정</a></li>
+                                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> 수능 대비반</a></li>
+                                        <li class="footer-link"><a href="#"><i class="fas fa-chevron-right"></i> 특강 프로그램</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="footer-column">
+                                    <h3 class="footer-heading">연락처</h3>
+                                    <div class="footer-contact-item">
+                                        <div class="footer-contact-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="footer-contact-text">
+                                            서울특별시 강남구 테헤란로 123<br>
+                                            교연빌딩 5층
+                                        </div>
+                                    </div>
+                                    <div class="footer-contact-item">
+                                        <div class="footer-contact-icon">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </div>
+                                        <div class="footer-contact-text">
+                                            02-123-4567
+                                        </div>
+                                    </div>
+                                    <div class="footer-contact-item">
+                                        <div class="footer-contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="footer-contact-text">
+                                            kyoyeon@math-academy.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="footer-divider"></div>
+                            
+                            <div class="footer-bottom">
+                                <div class="copyright">
+                                    © 2025 교연수학. All Rights Reserved.
+                                </div>
+                                <div class="footer-bottom-links">
+                                    <a href="#" class="footer-bottom-link">개인정보처리방침</a>
+                                    <a href="#" class="footer-bottom-link">이용약관</a>
+                                    <a href="#" class="footer-bottom-link">사이트맵</a>
+                                </div>
+                            </div>
+                        </footer>
+                
+                    <!-- 스크립트 -->
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+                    <script>
+                        // jQuery를 사용하여 문서가 완전히 로드된 후 실행
+                        $(document).ready(function() {
+                            console.log("문서 로드 완료");
+                            
+                            // AOS 애니메이션 초기화
+                            AOS.init({
+                                duration: 800,
+                                easing: 'ease-out',
+                                once: true
+                            });
+                            
+                            // 네비게이션 바 스크롤 이벤트 처리
+                            $(window).scroll(function() {
+                                if ($(window).scrollTop() > 10) {
+                                    $('nav').css({
+                                        'box-shadow': '0 10px 30px rgba(0, 0, 0, 0.1)',
+                                        'padding': '1rem 4rem'
+                                    });
+                                } else {
+                                    $('nav').css({
+                                        'box-shadow': 'none',
+                                        'padding': '1.5rem 4rem'
+                                    });
+                                }
+                                
+                                // 스크롤 위로 버튼 표시/숨김
+                                if ($(window).scrollTop() > 300) {
+                                    $('.scroll-to-top').addClass('visible');
+                                } else {
+                                    $('.scroll-to-top').removeClass('visible');
+                                }
+                            });
+                            
+                            // 모바일 메뉴 토글
+                            $('.menu-toggle').click(function(e) {
+                                console.log("햄버거 메뉴 클릭됨");
+                                e.preventDefault();
+                                $(this).toggleClass('active');
+                                $('.nav-links').toggleClass('active');
+                                $('.menu-overlay').toggleClass('active');
+                                
+                                if ($('.nav-links').hasClass('active')) {
+                                    $('body').css('overflow', 'hidden');
+                                } else {
+                                    $('body').css('overflow', '');
+                                }
+                            });
+                            
+                            // 메뉴 오버레이 클릭 시 메뉴 닫기
+                            $('.menu-overlay').click(function() {
+                                $('.menu-toggle').removeClass('active');
+                                $('.nav-links').removeClass('active');
+                                $(this).removeClass('active');
+                                $('body').css('overflow', '');
+                            });
+                            
+                            // 모바일 드롭다운 메뉴 토글
+                            $('.nav-link.has-dropdown').click(function(e) {
+                                if ($(window).width() <= 768) {
+                                    e.preventDefault();
+                                    
+                                    // 다른 모든 드롭다운 닫기
+                                    $('.nav-link.has-dropdown').not(this).removeClass('active');
+                                    $('.nav-link.has-dropdown').not(this).parent().removeClass('active');
+                                    
+                                    // 현재 항목 토글
+                                    $(this).toggleClass('active');
+                                    $(this).parent().toggleClass('active');
+                                }
+                            });
+                            
+                            // 모바일 메뉴 내의 항목 클릭 시 메뉴 닫기 (드롭다운 제외)
+                            $('.nav-link:not(.has-dropdown), .dropdown-item').click(function() {
+                                if ($(window).width() <= 768) {
+                                    $('.menu-toggle').removeClass('active');
+                                    $('.nav-links').removeClass('active');
+                                    $('.menu-overlay').removeClass('active');
+                                    $('body').css('overflow', '');
+                                }
+                            });
+                            
+                            // 윈도우 리사이즈 시 모바일 메뉴 상태 리셋
+                            $(window).resize(function() {
+                                if ($(window).width() > 768) {
+                                    $('.menu-toggle').removeClass('active');
+                                    $('.nav-links').removeClass('active');
+                                    $('.menu-overlay').removeClass('active');
+                                    $('body').css('overflow', '');
+                                    
+                                    // 모든 드롭다운 메뉴 초기화
+                                    $('.nav-link.has-dropdown').removeClass('active');
+                                    $('.nav-link.has-dropdown').parent().removeClass('active');
+                                }
+                            });
+                            
+                            // 네비게이션 링크 스무스 스크롤
+                            $('a[href^="#"]:not(.has-dropdown)').click(function(e) {
+                                var targetId = $(this).attr('href');
+                                if (targetId === '#') {
+                                    e.preventDefault();
+                                    return;
+                                }
+                                
+                                var targetElement = $(targetId);
+                                if (targetElement.length) {
+                                    e.preventDefault();
+                                    
+                                    var delay = $('.nav-links').hasClass('active') ? 300 : 0;
+                                    
+                                    setTimeout(function() {
+                                        $('html, body').animate({
+                                            scrollTop: targetElement.offset().top - 80
+                                        }, 800);
+                                    }, delay);
+                                }
+                            });
+                            
+                            // 스크롤 위로 버튼 클릭 이벤트
+                            $('.scroll-to-top').click(function() {
+                                $('html, body').animate({
+                                    scrollTop: 0
+                                }, 800);
+                            });
+                            
+                            // 테스티모니얼 슬라이더 기능
+                            var currentSlide = 0;
+                            var totalSlides = $('.testimonial-slide').length;
+                            
+                            function showSlide(index) {
+                                if (index < 0) {
+                                    index = totalSlides - 1;
+                                } else if (index >= totalSlides) {
+                                    index = 0;
+                                }
+                                
+                                currentSlide = index;
+                                updateSlider();
+                            }
+                            
+                            function updateSlider() {
+                                var slideWidth = $('.testimonial-slide').outerWidth(true);
+                                var offset = -currentSlide * slideWidth;
+                                
+                                $('.testimonial-slider').css('transform', 'translateX(' + offset + 'px)');
+                                
+                                // 인디케이터 업데이트
+                                $('.dot').removeClass('active');
+                                $('.dot').eq(currentSlide).addClass('active');
+                            }
+                            
+                            // 화살표 버튼 클릭 이벤트
+                            $('.next-arrow').click(function() {
+                                showSlide(currentSlide + 1);
+                            });
+                            
+                            $('.prev-arrow').click(function() {
+                                showSlide(currentSlide - 1);
+                            });
+                            
+                            // 도트 인디케이터 클릭 이벤트
+                            $('.dot').click(function() {
+                                var index = $(this).index();
+                                showSlide(index);
+                            });
+                            
+                            // 자동 슬라이드 (5초마다)
+                            setInterval(function() {
+                                showSlide(currentSlide + 1);
+                            }, 5000);
+                            
+                            // FAQ 아코디언 기능
+                            $('.faq-question').click(function() {
+                                var parent = $(this).parent();
+                                
+                                if (parent.hasClass('active')) {
+                                    parent.removeClass('active');
+                                } else {
+                                    $('.faq-item').removeClass('active');
+                                    parent.addClass('active');
+                                }
+                            });
+                            
+                            // 포털 폼 탭 기능
+                            $('.form-tab').click(function() {
+                                $('.form-tab').removeClass('active');
+                                $(this).addClass('active');
+                                
+                                // 실제 구현에서는 여기에 폼 전환 코드 추가
+                            });
+                            
+                            // 라이브 챗 버튼 클릭 이벤트 (예시)
+                            $('.live-chat-button').click(function() {
+                                alert('라이브 채팅 기능은 실제 운영 시 구현될 예정입니다.');
+                            });
+                            
+                            // 폼 제출 이벤트 처리
+                            $('.contact-form').submit(function(e) {
+                                e.preventDefault();
+                                
+                                // 실제 구현에서는 AJAX를 사용하여 폼 데이터 전송
+                                alert('문의가 성공적으로 접수되었습니다. 빠른 시일 내에 답변 드리겠습니다.');
+                                
+                                // 폼 초기화
+                                this.reset();
+                            });
+                            
+                            // 마이크로 인터랙션: 버튼 효과
+                            $('.cta-button, .submit-button, .form-tab, .faq-question, .blog-link, .social-icon').hover(
+                                function() {
+                                    $(this).css('transform', 'translateY(-3px)');
+                                },
+                                function() {
+                                    $(this).css('transform', 'translateY(0)');
+                                }
+                            );
+                            
+                            // 3D 틸트 효과 (교사 카드)
+                            $('.teacher-card').mousemove(function(e) {
+                                const card = $(this);
+                                const cardWidth = card.width();
+                                const cardHeight = card.height();
+                                
+                                const mouseX = e.pageX - card.offset().left;
+                                const mouseY = e.pageY - card.offset().top;
+                                
+                                const rotateY = ((mouseX / cardWidth) - 0.5) * 10;
+                                const rotateX = ((mouseY / cardHeight) - 0.5) * -10;
+                                
+                                card.css('transform', `translateY(-15px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`);
+                            });
+                            
+                            $('.teacher-card').mouseleave(function() {
+                                $(this).css('transform', '');
+                            });
+                            
+                            // 실시간 수학 계산 데모 (히어로 섹션의 숫자 증가 애니메이션)
+                            function animateCounter(target, start, end, duration) {
+                                let startTime = null;
+                                
+                                function animate(currentTime) {
+                                    if (!startTime) startTime = currentTime;
+                                    const timeElapsed = currentTime - startTime;
+                                    const progress = Math.min(timeElapsed / duration, 1);
+                                    const value = Math.floor(progress * (end - start) + start);
+                                    
+                                    target.text(value);
+                                    
+                                    if (progress < 1) {
+                                        requestAnimationFrame(animate);
+                                    }
+                                }
+                                
+                                requestAnimationFrame(animate);
+                            }
+                            
+                            // 확률적 효과를 위한 수학 방정식 생성
+                            function generateRandomEquation() {
+                                const equations = [
+                                    "y = x<sup>2</sup> + 2x + 1",
+                                    "f'(x) = 2x + cos(x)",
+                                    "∫ e<sup>x</sup> dx = e<sup>x</sup> + C",
+                                    "lim<sub>x→0</sub> sin(x)/x = 1",
+                                    "x = (-b ± √(b<sup>2</sup>-4ac))/2a",
+                                    "∑<sub>n=1</sub><sup>∞</sup> 1/n<sup>2</sup> = π<sup>2</sup>/6"
+                                ];
+                                
+                                return equations[Math.floor(Math.random() * equations.length)];
+                            }
+                            
+                            // 주기적으로 방정식 업데이트
+                            setInterval(function() {
+                                $('.equation').each(function(index) {
+                                    if (Math.random() > 0.7) {
+                                        $(this).html(generateRandomEquation());
+                                        $(this).css({
+                                            'opacity': 0,
+                                            'transform': 'translateY(20px)'
+                                        });
+                                        
+                                        setTimeout(() => {
+                                            $(this).css({
+                                                'opacity': 0.3,
+                                                'transform': 'translateY(0)'
+                                            });
+                                        }, 100);
+                                    }
+                                });
+                            }, 5000);
+                        });
+                    </script>
+                </body>
+                </html>
